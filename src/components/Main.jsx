@@ -37,16 +37,36 @@ export default function Main() {
   const [selectedGenre, setSelectedGenre] = useState('');
   const [filteredMovies, setFilteredMovies] = useState(moivesAr);
 
+  useEffect(() => {
+    if (selectedGenre === '') {
+      setFilteredMovies(moivesAr);
+    } else {
+      const filtered = moivesAr.filter(movie => movie.genre === selectedGenre);
+      setFilteredMovies(filtered);
+    }
+  }, [selectedGenre]);
+
+  const genres = [...new Set(moivesAr.map(movie => movie.genre))];
+
   return (
     <div className="container mt-5">
-      <ul className="list-group">
-        {filteredMovies.map((movie, index) => (
-          <li key={index} className="list-group-item d-flex justify-content-between">
-            <span>{movie.title}</span>
-            <span>{movie.genre}</span>
-          </li>
-        ))}
-      </ul>
+        <div className="mb-3">
+            <select id="genre-select" className="form-select form-select-lg" value={selectedGenre} onChange={e => setSelectedGenre(e.target.value)}>
+                <option value="">Seleziona genere</option>
+                {genres.map((genre, index) => (
+                    <option key={index} value={genre}>{genre}</option>
+                ))}
+            </select>
+        </div>
+
+        <ul className="list-group">
+            {filteredMovies.map((movie, index) => (
+            <li key={index} className="list-group-item d-flex justify-content-between">
+                <span>{movie.title}</span>
+                <span>{movie.genre}</span>
+            </li>
+            ))}
+        </ul>
     </div>
   );
-}
+};
